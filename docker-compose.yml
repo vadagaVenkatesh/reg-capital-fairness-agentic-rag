@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # Regulatory Capital Fairness Agentic RAG System
+  rag-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reg-capital-fairness-rag
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MESH_API_BASE_URL=${MESH_API_BASE_URL:-http://mesh-api:5000}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    volumes:
+      - ./app:/app/app
+      - ./config:/app/config
+      - ./data:/app/data
+      - ./examples:/app/examples
+    depends_on:
+      - vectordb
+      - mesh-api
+    networks:
+      - rag-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  
+  # Vector Database (Chroma/FAISS alternative with persistence)
+  vectordb:
+    image: chromadb/chroma:latest
+    container_name: reg-capital-vectordb
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./data/chroma:/chroma/chroma
+    environment:
+      - CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER=chromadb.auth.token.TokenAuthCredentialsProvider
+      - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMA_AUTH_TOKEN:-default-token}
+      - CHROMA_SERVER_AUTH_TOKEN_TRANSPORT_HEADER=X-Chroma-Token
+    networks:
+      - rag-network
+    restart: unless-stopped
+  
+  # Consumer Risk Model Mesh API (Mock for demo)
+  mesh-api:
+    image: python:3.11-slim
+    container_name: consumer-risk-mesh-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mock_mesh_api:/app
+    working_dir: /app
+    command: python -m flask run --host=0.0.0.0 --port=5000
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+    networks:
+      - rag-network
+    restart: unless-stopped
+  
+  # Jupyter Notebook for development and demos
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reg-capital-jupyter
+    ports:
+      - "8888:8888"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - JUPYTER_ENABLE_LAB=yes
+    volumes:
+      - ./:/app
+      - ./notebooks:/app/notebooks
+    command: jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''
+    networks:
+      - rag-network
+    restart: unless-stopped
+
+networks:
+  rag-network:
+    driver: bridge
+
+volumes:
+  chroma-data:
+    driver: local
