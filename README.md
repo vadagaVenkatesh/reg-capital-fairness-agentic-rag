@@ -114,4 +114,4 @@ docker-compose up
 
 ## Author
 
-**VDG Venkatesh** - [@vadagaVenkatesh](https://github.com/vadagaVenkatesh) Co auther using Agentic AI 
+**VDG Venkatesh** - [@vadagaVenkatesh](https://github.com/vadagaVenkatesh) Co author using Agentic AI 
