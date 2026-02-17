@@ -1,0 +1,67 @@
+# Regulatory Capital & Fairness Agentic RAG System Configuration
+
+app:
+  name: "Regulatory Capital Fairness Co-Pilot"
+  version: "0.1.0"
+  environment: "development"
+  log_level: "INFO"
+  
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  
+llm:
+  provider: "openai"
+  model: "gpt-4-turbo-preview"
+  temperature: 0.1
+  max_tokens: 4000
+  
+embeddings:
+  provider: "openai"
+  model: "text-embedding-3-large"
+  dimensions: 1536
+  
+vector_store:
+  provider: "chroma"
+  collection_name: "regulatory_knowledge_base"
+  persist_directory: "./data/vector_db"
+  
+rag:
+  chunk_size: 1000
+  chunk_overlap: 200
+  retrieval_k: 5
+  
+agents:
+  orchestrator:
+    name: "Regulatory Orchestrator"
+    max_iterations: 5
+  regulatory:
+    name: "SR 11-7 & Basel Specialist"
+    tools: ["get_model_validation_report", "search_sr_11_7_guidance"]
+  capital:
+    name: "CECL & RWA Specialist"
+    tools: ["calculate_lifetime_loss", "calculate_rwa_impact"]
+  fairness:
+    name: "Fair Lending & ECOA Specialist"
+    tools: ["check_disparate_impact", "analyze_approval_rates"]
+  ops:
+    name: "Ops Resilience Watchdog"
+    tools: ["get_drift_metrics", "check_data_quality"]
+    
+mesh_client:
+  base_url: "http://localhost:5000"
+  api_version: "v1"
+  timeout: 30
+  
+knowledge_base:
+  data_dir: "./data/regulatory_docs"
+  sources:
+    sr_11_7:
+      path: "sr_11_7_guidance.pdf"
+    basel_iii:
+      path: "basel_iii_endgame.pdf"
+    cecl:
+      path: "cecl_accounting_standard.pdf"
+    ecoa:
+      path: "regulation_b_ecoa.pdf"
