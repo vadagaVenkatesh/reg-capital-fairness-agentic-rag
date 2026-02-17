@@ -40,6 +40,78 @@ pip install -e .[dev]
 
 Connects to [consumer-risk-model-mesh](https://github.com/vadagaVenkatesh/consumer-risk-model-mesh) for quantitative calculations.
 
+## API Usage
+
+### Start the FastAPI Server
+
+```bash
+python -m app.main
+# Server runs on http://localhost:8000
+```
+
+### Endpoints
+
+#### Health Check
+```bash
+curl http://localhost:8000/health
+```
+
+#### Query via Orchestrator (Auto-routing)
+```bash
+curl -X POST http://localhost:8000/query \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "What are the SR 11-7 requirements for model validation?"
+  }'
+```
+
+#### Direct Agent Queries
+
+**Regulatory Agent:**
+```bash
+curl -X POST http://localhost:8000/query/regulatory \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Explain Basel III capital adequacy requirements"
+  }'
+```
+
+**Capital Agent:**
+```bash
+curl -X POST http://localhost:8000/query/capital \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Calculate CECL provisions under stressed scenario"
+  }'
+```
+
+**Fairness Agent:**
+```bash
+curl -X POST http://localhost:8000/query/fairness \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Check this lending model for disparate impact"
+  }'
+```
+
+**Ops Agent:**
+```bash
+curl -X POST http://localhost:8000/query/ops \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "What is the data quality for our credit risk models?"
+  }'
+```
+
+### Docker Deployment
+
+```bash
+docker-compose up
+# Access API at http://localhost:8000
+# Vector DB at http://localhost:6333
+```
+
+
 ## Author
 
 **VDG Venkatesh** - [@vadagaVenkatesh](https://github.com/vadagaVenkatesh)
