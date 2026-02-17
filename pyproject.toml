@@ -1,0 +1,120 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reg-capital-fairness-agentic-rag"
+version = "0.1.0"
+description = "Agentic RAG System for Regulatory Compliance, Capital Strategy, and Fair Lending Governance"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "VDG Venkatesh", email = "vadagavenkatesh@example.com"}
+]
+keywords = [
+    "regulatory-compliance",
+    "risk-management",
+    "agentic-rag",
+    "langgraph",
+    "basel-iii",
+    "sr-11-7",
+    "fair-lending",
+    "cecl"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Office/Business :: Financial",
+]
+
+[project.urls]
+Homepage = "https://github.com/vadagaVenkatesh/reg-capital-fairness-agentic-rag"
+Repository = "https://github.com/vadagaVenkatesh/reg-capital-fairness-agentic-rag"
+Issues = "https://github.com/vadagaVenkatesh/reg-capital-fairness-agentic-rag/issues"
+
+# Core Dependencies
+[project.dependencies]
+langchain = ">=0.1.0"
+langchain-community = ">=0.0.20"
+langchain-openai = ">=0.0.5"
+langgraph = ">=0.0.20"
+pydantic = ">=2.5.0"
+pydantic-settings = ">=2.1.0"
+python-dotenv = ">=1.0.0"
+faiss-cpu = ">=1.7.4"
+chromadb = ">=0.4.22"
+tiktoken = ">=0.5.2"
+openai = ">=1.10.0"
+pyarrow = ">=14.0.0"
+pandas = ">=2.1.0"
+numpy = ">=1.24.0"
+scipy = ">=1.11.0"
+pyyaml = ">=6.0"
+requests = ">=2.31.0"
+fastapi = ">=0.109.0"
+uvicorn = {version = ">=0.27.0", extras = ["standard"]}
+httpx = ">=0.26.0"
+python-multipart = ">=0.0.6"
+
+# Optional Dependencies for Development
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.12.0",
+    "isort>=5.13.0",
+    "flake8>=7.0.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+]
+notebooks = [
+    "jupyter>=1.0.0",
+    "ipykernel>=6.29.0",
+    "matplotlib>=3.8.0",
+    "seaborn>=0.13.0",
+    "plotly>=5.18.0",
+]
+docs = [
+    "mkdocs>=1.5.3",
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.24.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --cov=app --cov-report=term-missing"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
